@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="com.chat.model.Message"/>
+    <fullyQualifiedTypeName name="com.chatclient.view.FriendList"/>
+    <fullyQualifiedTypeName name="com.yychatclient.control.ClientConnect"/>
+    <fullyQualifiedTypeName name="com.yychatserver.control.StartServer"/>
+</qualifiedTypeNameHistroy>

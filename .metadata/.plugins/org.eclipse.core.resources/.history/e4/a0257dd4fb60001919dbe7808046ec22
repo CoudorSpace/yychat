@@ -1,0 +1,5 @@
+package com.yychatserver.control;
+
+public class StartServer {
+
+}

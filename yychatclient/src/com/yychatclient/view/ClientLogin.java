@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
@@ -17,7 +18,7 @@ import java.util.HashMap;
 
 import javax.swing.*;
 
-public class ClientLogin extends JFrame implements ActionListener{
+public class ClientLogin extends JFrame implements ActionListener,KeyListener{
 	
 	JLabel jlbl1;
 		
@@ -46,15 +47,19 @@ public class ClientLogin extends JFrame implements ActionListener{
 		jlbl4.setForeground(Color.blue);
 		jlbl5=new JLabel("…Í«Î√‹¬Î±£ª§",JLabel.CENTER);
 		jtf1=new JTextField();
+		
 		jb4=new JButton(new ImageIcon("images/clear.gif"));
 		jpf1=new JPasswordField();
-		jpf1.addKeyListener(new KeyAdapter(){
-			public void keyPressed(KeyEvent event){
-				if(event.getKeyText(event.getKeyCode()).compareToIgnoreCase("Enter")==0){
-					jb1.doClick();
-				}
-			}
-		});
+//		jpf1.addKeyListener(
+//				new KeyAdapter(){
+//			public void keyPressed(KeyEvent event){
+//				if(event.getKeyText(event.getKeyCode()).compareToIgnoreCase("Enter")==0){
+//					jb1.doClick();
+//				}
+//			}
+//		});
+		
+		jpf1.addKeyListener(this);
 		
 		jcb1=new JCheckBox("“˛…Ìµ«¬º");jcb2=new JCheckBox("º«◊°√‹¬Î");
 		jp2.add(jlbl2);	jp2.add(jtf1);	jp2.add(jb4);	
@@ -149,7 +154,22 @@ public class ClientLogin extends JFrame implements ActionListener{
 					}
 		      }
 		}
-
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 	}
 		
 		

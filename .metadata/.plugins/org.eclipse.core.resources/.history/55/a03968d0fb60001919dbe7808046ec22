@@ -1,5 +1,0 @@
-package com.yychatserver.control;
-
-public class ServerReceiverThread {
-
-}

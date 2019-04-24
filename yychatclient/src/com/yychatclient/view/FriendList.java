@@ -64,7 +64,7 @@ public class FriendList extends JFrame implements ActionListener,MouseListener{/
 			myFriendJLabel[i].addMouseListener(this);
 			myFriendListJPanel.add(myFriendJLabel[i]);
 		}
-		myFriendJLabel[Integer.parseInt(userName)].setEnabled(true);
+		//myFriendJLabel[Integer.parseInt(userName)].setEnabled(true);
 		myFriendScrollPane=new JScrollPane(myFriendListJPanel);
 		myFriendPanel.add(myFriendScrollPane);
 		
@@ -225,12 +225,16 @@ public class FriendList extends JFrame implements ActionListener,MouseListener{/
 
 	public void setEnableFriendIcon(String friendString) {
 		// TODO Auto-generated method stub
-		
+		//friendString = friendString.trim();
 		String[] friendName = friendString.split(" ");
 		int count = friendName.length;
 		for (int i=0;i<count; i++) {
 			myFriendJLabel[Integer.parseInt(friendName[i])].setEnabled(true);
 		}
 		
+	}
+	
+	public void setEnableNewFriendIcon(String friendName) {
+		this.myFriendJLabel[Integer.parseInt(friendName)].setEnabled(true);
 	}
 }

@@ -75,6 +75,19 @@ public class StartServer {
 			//告诉客户端密码验证通过,可以创建Message类
 		mess.setMessageType("Message.message_LoginSuccess");//1为验证通过
 		
+		String friend_Relation_Sql = "select slaveuser from relation where majoruser = ? and relation_type = '1'";
+		psmt = conn.prepareStatement(friend_Relation_Sql);
+		psmt.setString(1, userName);
+		rs = psmt.executeQuery();
+		
+		String friendString = new String();
+		while (rs.next()) {
+			friendString += rs.getString("slaveuser") + " ";
+		}
+		
+		mess.setContent(friendString);
+		System.out.println(userName + "的好友列表：" + friendString);
+		
 		}else{	
 			
 			mess.setMessageType("Message.message_LoginFailure");//0为验证不通过

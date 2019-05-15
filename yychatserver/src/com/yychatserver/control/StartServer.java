@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.yychatclient.model.*;
+import com.yychatserver.control.*;
 
 public class StartServer {
 	public static HashMap hmSocket=new HashMap<String,Socket>();
@@ -45,52 +46,54 @@ public class StartServer {
 		mess.setSender("Server");
 		mess.setReceiver(userName);
 		
-		System.out.println("mysqlDB（8.0.15）驱动加载中：com.mysql.cj.jdbc.Driver");
-		Class.forName("com.mysql.cj.jdbc.Driver");
-		System.out.println("mysqlDB（8.0.15）驱动加载成功");
+//		System.out.println("mysqlDB（8.0.15）驱动加载中：com.mysql.cj.jdbc.Driver");
+//		Class.forName("com.mysql.cj.jdbc.Driver");
+//		System.out.println("mysqlDB（8.0.15）驱动加载成功");
+//		
+//		String url = "jdbc:mysql://localhost:3306/yychat?useSSL=FALSE&serverTimezone=UTC";
+//		String dbUser = "root";
+//		String dbPassword = "lierlulu00388239";
+//		
+//		System.out.println("数据库（yychat）连接请求中...");
+//		Connection conn = DriverManager.getConnection(url,dbUser,dbPassword);
+//		System.out.println("数据库（yychat）连接成功");
+//		
+//		
+//		String user_login_sql = "select * from user where username=? and password=?;";
+//		System.out.println("与数据库交互中...\r\n" + user_login_sql);
+//		PreparedStatement psmt = conn.prepareStatement(user_login_sql);
+//		psmt.setString(1,userName);
+//		psmt.setString(2,passWord);
+//		
+//		System.out.println("数据库返回数据中...");
+//		ResultSet rs = psmt.executeQuery();
+//		
+//		boolean loginSuccess = rs.next();
 		
-		String url = "jdbc:mysql://localhost:3306/yychat?useSSL=FALSE&serverTimezone=UTC";
-		String dbUser = "root";
-		String dbPassword = "lierlulu00388239";
 		
-		System.out.println("数据库（yychat）连接请求中...");
-		Connection conn = DriverManager.getConnection(url,dbUser,dbPassword);
-		System.out.println("数据库（yychat）连接成功");
-		
-		
-		String user_login_sql = "select * from user where username=? and password=?;";
-		System.out.println("与数据库交互中...\r\n" + user_login_sql);
-		PreparedStatement psmt = conn.prepareStatement(user_login_sql);
-		psmt.setString(1,userName);
-		psmt.setString(2,passWord);
-		
-		System.out.println("数据库返回数据中...");
-		ResultSet rs = psmt.executeQuery();
-		
-		boolean loginSuccess = rs.next();
-		
-		
+		boolean loginSuccess = YychatDbUtil.loginValidate(userName, passWord);
 		
 		if(loginSuccess){
 			//告诉客户端密码验证通过,可以创建Message类
-		mess.setMessageType("Message.message_LoginSuccess");//1为验证通过
+		mess.setMessageType(Message.message_LoginSuccess);//1为验证通过
 		
-		String friend_Relation_Sql = "select slaveuser from relation where majoruser = ? and relation_type = '1'";
-		psmt = conn.prepareStatement(friend_Relation_Sql);
-		psmt.setString(1, userName);
-		rs = psmt.executeQuery();
-		
-		String friendString = new String();
-		while (rs.next()) {
-			friendString += rs.getString("slaveuser") + " ";
-		}
+//		String friend_Relation_Sql = "select slaveuser from relation where majoruser = ? and relation_type = '1'";
+//		psmt = conn.prepareStatement(friend_Relation_Sql);
+//		psmt.setString(1, userName);
+//		rs = psmt.executeQuery();
+//		
+//		String friendString = new String();
+//		while (rs.next()) {
+//			friendString += rs.getString("slaveuser") + " ";
+//		}
+		String friendString = YychatDbUtil.getFriendString(userName);
 		
 		mess.setContent(friendString);
 		System.out.println(userName + "的好友列表：" + friendString);
 		
 		}else{	
 			
-			mess.setMessageType("Message.message_LoginFailure");//0为验证不通过
+			mess.setMessageType(Message.message_LoginFailure);//0为验证不通过
 			
 		}
 		sendMessage(s, mess);
@@ -123,7 +126,7 @@ public class StartServer {
 	
 			}
 		
-		} catch (IOException | ClassNotFoundException | SQLException e) {
+		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}

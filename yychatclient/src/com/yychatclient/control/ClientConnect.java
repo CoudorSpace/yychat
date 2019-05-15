@@ -21,9 +21,8 @@ public class ClientConnect {
 			e.printStackTrace();
 		}
 	}
-
-	public boolean loginValidate(User user){
-		boolean loginSuccess=false;
+	
+	public Message loginValidateFromDB(User user){
 		ObjectOutputStream oos;
 		ObjectInputStream ois;
 		Message mess= null;
@@ -37,8 +36,7 @@ public class ClientConnect {
 			 ois=new ObjectInputStream(s.getInputStream());
 			mess=(Message)ois.readObject();
 			
-			if(mess.getMessageType().equals("Message.message_LoginSuccess")){
-				loginSuccess=true;
+			if(mess.getMessageType().equals(Message.message_LoginSuccess)){
 				System.out.println(user.getUserName()+"登陆成功");
 				hmSocket.put(user.getUserName(),s);
 				new ClientReceiverThread(s).start();
@@ -47,7 +45,36 @@ public class ClientConnect {
 		} catch (IOException|ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		return loginSuccess;
+		return mess;
 		
 	}
+
+//	public boolean loginValidate(User user){
+//		boolean loginSuccess=false;
+//		ObjectOutputStream oos;
+//		ObjectInputStream ois;
+//		Message mess= null;
+//		try {
+//			oos =new ObjectOutputStream(s.getOutputStream());
+//			oos.writeObject(user);
+//			
+//			
+//			
+//			//接收验证通过的mess
+//			 ois=new ObjectInputStream(s.getInputStream());
+//			mess=(Message)ois.readObject();
+//			
+//			if(mess.getMessageType().equals("Message.message_LoginSuccess")){
+//				loginSuccess=true;
+//				System.out.println(user.getUserName()+"登陆成功");
+//				hmSocket.put(user.getUserName(),s);
+//				new ClientReceiverThread(s).start();
+//			}
+//			
+//		} catch (IOException|ClassNotFoundException e) {
+//			e.printStackTrace();
+//		}
+//		return loginSuccess;
+//		
+//	}
 }

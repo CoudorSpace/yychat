@@ -101,6 +101,7 @@ public class ClientLogin extends JFrame implements ActionListener,KeyListener{
 		//创建南部组建
 		jb1=new JButton(new ImageIcon("images/denglu.gif"));
 		jb2=new JButton(new ImageIcon("images/zhuce.gif"));
+		jb2.addActionListener(this);
 		jb3=new JButton(new ImageIcon("images/quxiao.gif"));
 		jp1=new JPanel();
 		jp1.add(jb1);jp1.add(jb2);jp1.add(jb3);
@@ -119,7 +120,7 @@ public class ClientLogin extends JFrame implements ActionListener,KeyListener{
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource()==jb1);{
+		if(e.getSource()==jb1){
 			String userName= jtf1.getText();
 			String password=new String(jpf1.getPassword());
 			//创建User对象 
@@ -127,33 +128,39 @@ public class ClientLogin extends JFrame implements ActionListener,KeyListener{
 			user.setUserName(userName);
 			user.setPassWord(password);
 			
-			boolean loginSuccess=new ClientConnect().loginValidate(user);
-			if(loginSuccess){
+			Message msg=new ClientConnect().loginValidateFromDB(user);
+			System.out.println(msg.getMessageType());
+			System.out.println(msg.getMessageType().equals(MessageType.message_LoginSuccess));
+			if(msg.getMessageType().equals(MessageType.message_LoginSuccess)){
+				FriendList friendList = new FriendList(userName, msg.getContent());
+				hmFriendList.put(userName, friendList);
+				//第一步
+				Message mess=new Message();
+				mess.setSender(userName);
+				mess.setReceiver("Server");
+				mess.setMessageType(Message.message_RequestOnlineFriend);
+				Socket s=(Socket)ClientConnect.hmSocket.get(userName);
+				ObjectOutputStream oos;
+				try{
+					oos=new ObjectOutputStream(s.getOutputStream());
+					oos.writeObject(mess);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 				
-				
-			FriendList friendList = new FriendList(userName);
-			hmFriendList.put(userName, friendList);
-			//第一步
-			Message mess=new Message();
-			mess.setSender(userName);
-			mess.setReceiver("Server");
-			mess.setMessageType(Message.message_RequestOnlineFriend);
-			Socket s=(Socket)ClientConnect.hmSocket.get(userName);
-			ObjectOutputStream oos;
-			try{
-				oos=new ObjectOutputStream(s.getOutputStream());
-				oos.writeObject(mess);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
+				this.dispose();
+				}else{
+					JOptionPane.showMessageDialog(this,"密码错误");
 			
-			this.dispose();
-			}else{
-			JOptionPane.showMessageDialog(this,"密码错误");
-			
-					}
-		      }
+				}
 		}
+		
+		if (e.getSource() == jb2) {
+			System.out.println("注册请求");
+		}
+		
+		
+	}
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub

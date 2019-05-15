@@ -47,7 +47,7 @@ public class FriendList extends JFrame implements ActionListener,MouseListener{/
 	JButton black;
 	String userName;
 	
-	public FriendList(String userName){
+	public FriendList(String userName, String friendString){
 		this.userName=userName;
 		this.setTitle(userName);
 		//第一张卡片
@@ -55,11 +55,13 @@ public class FriendList extends JFrame implements ActionListener,MouseListener{/
 		myFriendJButton=new JButton("我的沙雕网友");
 		myFriendPanel.add(myFriendJButton,"North");
 		//中部
-		myFriendListJPanel=new JPanel(new GridLayout(FRIENDCOUNT-1,1));
-		for(int i=1;i<FRIENDCOUNT;i++)
+		String[] friendsName = friendString.trim().split(" ");
+		int count = friendsName.length;
+		myFriendListJPanel=new JPanel(new GridLayout(count,1));
+		for(int i=0;i<count;i++)
 		{
-			myFriendJLabel[i]=new JLabel(i+"",new ImageIcon("images/yy0.gif"),JLabel.LEFT);//"1"
-			myFriendJLabel[i].setEnabled(false);
+			myFriendJLabel[i]=new JLabel(friendsName[i],new ImageIcon("images/house.png"),JLabel.LEFT);//"1"
+			//myFriendJLabel[i].setEnabled(false);
 			
 			myFriendJLabel[i].addMouseListener(this);
 			myFriendListJPanel.add(myFriendJLabel[i]);
@@ -125,7 +127,7 @@ public class FriendList extends JFrame implements ActionListener,MouseListener{/
 		blacklist=new JPanel(new GridLayout(BLACK-1,1));
 		for(int i=1;i<BLACK;i++)
 		{
-			BlackListJLabel[i]=new JLabel(i+"",new ImageIcon("images/timg.jpg"),JLabel.LEFT);//"2"
+			BlackListJLabel[i]=new JLabel(i+"",new ImageIcon("images/dhbh.jpg"),JLabel.LEFT);//"2"
 			BlackListJLabel[i].addMouseListener(this);
 			blacklist.add(BlackListJLabel[i]);
 		}
@@ -140,7 +142,7 @@ public class FriendList extends JFrame implements ActionListener,MouseListener{/
 		this.add(myStrangerPanel,"2");
 		this.add(BlackList,"3");
 		
-		this.setSize(150,500);
+		this.setSize(240,500);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);

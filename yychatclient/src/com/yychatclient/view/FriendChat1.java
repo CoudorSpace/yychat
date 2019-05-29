@@ -70,7 +70,10 @@ public class FriendChat1 extends JFrame implements ActionListener{
 	}
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		if(arg0.getSource()==jb) jta.append("			"+jtf.getText()+"\r\n");
+		if(arg0.getSource()==jb) {
+			jta.append(jtf.getText()+"\r\n");
+		}
+			
 		
 		
 		//向服务器发送聊天信息
@@ -87,7 +90,7 @@ public class FriendChat1 extends JFrame implements ActionListener{
 		} catch (IOException e){
 			e.printStackTrace();
 		}
-		}
+	}
 	//@Override
 	/*public void run() {
 		ObjectInputStream ois;

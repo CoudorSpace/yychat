@@ -33,6 +33,7 @@ public class ClientLogin extends JFrame implements ActionListener,KeyListener{
 	
 	JButton jb1,jb2,jb3;
 	JPanel jp1;
+	
 	public static HashMap<String, FriendList> hmFriendList = new HashMap<String, FriendList>();
 	public ClientLogin(String userName){
 
@@ -121,13 +122,13 @@ public class ClientLogin extends JFrame implements ActionListener,KeyListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource()==jb1){
-			String userName= jtf1.getText();
+			String userName= jtf1.getText().trim();
 			String password=new String(jpf1.getPassword());
 			//创建User对象 
 			User user =new User();
 			user.setUserName(userName);
 			user.setPassWord(password);
-			
+			user.setUserMessageType("USER_LOGIN");
 			Message msg=new ClientConnect().loginValidateFromDB(user);
 			System.out.println(msg.getMessageType());
 			System.out.println(msg.getMessageType().equals(MessageType.message_LoginSuccess));
@@ -157,6 +158,24 @@ public class ClientLogin extends JFrame implements ActionListener,KeyListener{
 		
 		if (e.getSource() == jb2) {
 			System.out.println("注册请求");
+			
+			String userName= jtf1.getText().trim();
+			String password=new String(jpf1.getPassword());
+			//创建User对象 
+			User user =new User();
+			user.setUserName(userName);
+			user.setPassWord(password);
+			user.setUserMessageType("USER_REGISTER");
+			boolean registerSuccess = new ClientConnect().registerUserIntoDB(user);
+			
+			if (registerSuccess) {
+				JOptionPane.showMessageDialog(this,"注册成功");
+				
+			} else {
+				JOptionPane.showMessageDialog(this,"注册失败,请重试！");
+			}
+			
+			
 		}
 		
 		

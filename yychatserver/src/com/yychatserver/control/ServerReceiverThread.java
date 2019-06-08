@@ -54,6 +54,41 @@ public class ServerReceiverThread extends Thread{
 		
 		}
 		
+		if (mess.getMessageType().equals(MessageType.message_RequestAddFriend)) {
+			String friendName = mess.getContent();
+			
+			String sender = mess.getSender();
+			boolean haveUser = YychatDbUtil.userExist(friendName);
+			mess.setSender("Server");
+			mess.setReceiver(sender);
+			if (haveUser) {
+				
+				String relationType = "1";
+				
+				if (YychatDbUtil.seekRelation(sender, friendName, relationType)) {
+					mess.setMessageType(MessageType.message_AddFriendFailure_ReplicateAddFriend);
+				} else {
+					int count = YychatDbUtil.addRelation(sender, friendName, relationType);
+					
+					if(count != 0) {
+						mess.setMessageType(MessageType.message_AddFriendSuccess);
+						String allFriendName = YychatDbUtil.getFriendString(sender);
+						mess.setContent(allFriendName);
+					}
+				}
+				
+				
+			} else {
+				System.out.println("用户不存在");
+				
+				//mess.setContent("");
+				mess.setMessageType(MessageType.message_AddFriendFailure_UserNotExist);
+				
+			}
+			
+			senderMessage(s,mess);
+		}
+		
 		
 	}catch(IOException | ClassNotFoundException e){
 		e.printStackTrace();

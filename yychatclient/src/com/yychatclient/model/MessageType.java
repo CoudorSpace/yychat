@@ -11,4 +11,8 @@ public interface MessageType {
 	String message_NewOnlineFriend = "5";
 	String message_RegisterSuccess = "6";
 	String message_RegisterFaliure = "7";
+	String message_RequestAddFriend = "8";
+	String message_AddFriendSuccess = "9";
+	String message_AddFriendFailure_UserNotExist = "10";
+	String message_AddFriendFailure_ReplicateAddFriend= "11";
 }

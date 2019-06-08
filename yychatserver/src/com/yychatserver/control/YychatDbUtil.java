@@ -179,6 +179,84 @@ public class YychatDbUtil {
 		
 		
 	}
+
+	public static boolean userExist(String userName) {
+		boolean haveUser = false;
+		String seek_user_sql = "select username from yychat.user where username = ?";
+		Connection conn = getConnection();
+		PreparedStatement psmt = null;
+		ResultSet rs = null;
+		
+		try {
+			psmt = conn.prepareStatement(seek_user_sql);
+			psmt.setString(1, userName);
+			rs = psmt.executeQuery();
+
+			if (rs.next()) {
+				haveUser = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			closeDB(conn, psmt, rs);
+		}
+
+		
+		return haveUser;
+		
+		
+	}
+
+	public static boolean seekRelation(String majorUser, String slaveUser, String relationType) {
+		boolean seekRelationResult = false;
+		String seek_relation_sql = "select * from yychat.relation where majoruser = ? and slaveuser = ? and relation_type = ?;";
+		Connection conn = getConnection();
+		PreparedStatement psmt = null;
+		ResultSet rs = null;
+		
+		try {
+			psmt = conn.prepareStatement(seek_relation_sql);
+
+			psmt.setString(1, majorUser);
+			psmt.setString(2, slaveUser);
+			psmt.setString(3, relationType);
+			
+			rs = psmt.executeQuery();
+
+			seekRelationResult = rs.next();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			closeDB(conn, psmt, rs);
+		}
+		return seekRelationResult;
+	}
+
+	public static int addRelation(String majorUser, String slaveUser, String relationType) {
+		int count = 0;
+		String add_relation_sql = "insert into yychat.relation (majoruser,slaveuser,relation_type) values (?,?,?);";
+		
+		Connection conn = getConnection();
+		PreparedStatement psmt = null;
+		ResultSet rs = null;
+		
+		try {
+			psmt = conn.prepareStatement(add_relation_sql);
+			psmt.setString(1, majorUser);
+			psmt.setString(2, slaveUser);
+			psmt.setString(3, relationType);
+			
+			count = psmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeDB(conn, psmt, rs);
+		}
+		
+		return count;
+		
+	}
 	
 	
 	

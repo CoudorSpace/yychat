@@ -5,10 +5,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.HashMap;
 
 import javax.swing.*;
+
+import com.yychatclient.control.ClientConnect;
+import com.yychatclient.model.Message;
+import com.yychatclient.model.MessageType;
 
 public class FriendList extends JFrame implements ActionListener,MouseListener{//顶层容器
 	
@@ -36,6 +42,8 @@ public class FriendList extends JFrame implements ActionListener,MouseListener{/
 	JPanel myFriendStrangerPanel;
 	JButton myFriendJButton1;
 	JButton myStrangerJButton1;
+	JButton addFriendJButton;
+	JPanel addFriendJPanel;
 	
 	JButton blackListJButton1;
 	
@@ -52,20 +60,16 @@ public class FriendList extends JFrame implements ActionListener,MouseListener{/
 		this.setTitle(userName);
 		//第一张卡片
 		myFriendPanel=new JPanel(new BorderLayout());//边界布局
+		addFriendJButton = new JButton("添加沙雕网友");
+		addFriendJButton.addActionListener(this);
 		myFriendJButton=new JButton("我的沙雕网友");
-		myFriendPanel.add(myFriendJButton,"North");
+		addFriendJPanel = new JPanel(new GridLayout(2,1));
+		addFriendJPanel.add(addFriendJButton);
+		addFriendJPanel.add(myFriendJButton);
+		myFriendPanel.add(addFriendJPanel,"North");
 		//中部
-		String[] friendsName = friendString.trim().split(" ");
-		int count = friendsName.length;
-		myFriendListJPanel=new JPanel(new GridLayout(count,1));
-		for(int i=0;i<count;i++)
-		{
-			myFriendJLabel[i]=new JLabel(friendsName[i],new ImageIcon("images/house.png"),JLabel.LEFT);//"1"
-			//myFriendJLabel[i].setEnabled(false);
-			
-			myFriendJLabel[i].addMouseListener(this);
-			myFriendListJPanel.add(myFriendJLabel[i]);
-		}
+		myFriendListJPanel=new JPanel();
+		updateFriendIcon(friendString);
 		//myFriendJLabel[Integer.parseInt(userName)].setEnabled(true);
 		myFriendScrollPane=new JScrollPane(myFriendListJPanel);
 		myFriendPanel.add(myFriendScrollPane);
@@ -176,6 +180,26 @@ public class FriendList extends JFrame implements ActionListener,MouseListener{/
 			cardLayout.show(this.getContentPane(), "2");
 		}
 		
+		if (argo.getSource() == addFriendJButton) {
+			String addFriendName = JOptionPane.showInputDialog(null,"请输入你想一起沙雕的沙雕网友的名字：","结识沙雕网友",JOptionPane.DEFAULT_OPTION);
+			Message mess = new Message();
+			mess.setSender(userName);
+			mess.setReceiver("Server");
+			mess.setContent(addFriendName);
+			mess.setMessageType(MessageType.message_RequestAddFriend);
+			
+			Socket s = (Socket)ClientConnect.hmSocket.get(userName);
+			ObjectOutputStream oos;
+			
+			try {
+				oos = new ObjectOutputStream(s.getOutputStream());
+				oos.writeObject(mess);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
 	}
 
 	@Override
@@ -238,5 +262,22 @@ public class FriendList extends JFrame implements ActionListener,MouseListener{/
 	
 	public void setEnableNewFriendIcon(String friendName) {
 		this.myFriendJLabel[Integer.parseInt(friendName)].setEnabled(true);
+	}
+
+
+	public void updateFriendIcon(String friendString) {
+		myFriendListJPanel.removeAll();
+		String[] friendsName = friendString.trim().split(" ");
+		int count = friendsName.length;
+		myFriendListJPanel.setLayout(new GridLayout(count,1));
+		for(int i=0;i<count;i++)
+		{
+			myFriendJLabel[i]=new JLabel(friendsName[i],new ImageIcon("images/house.png"),JLabel.LEFT);//"1"
+			//myFriendJLabel[i].setEnabled(false);
+			
+			myFriendJLabel[i].addMouseListener(this);
+			myFriendListJPanel.add(myFriendJLabel[i]);
+		}
+		
 	}
 }
